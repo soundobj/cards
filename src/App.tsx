@@ -6,6 +6,7 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const base = import.meta.env.BASE_URL
 
   return (
     <>
@@ -18,7 +19,7 @@ function App() {
         <div>
           <h1>Get started</h1>
           <p>
-            Edit <code>src/App.tsx</code> and save to test 123<code>HMR</code>
+            Edit <code>src/App.tsx</code> and save to test 123 <code>HMR</code>
           </p>
         </div>
         <button
@@ -35,7 +36,7 @@ function App() {
       <section id="next-steps">
         <div id="docs">
           <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
+            <use href={`${base}icons.svg#documentation-icon`}></use>
           </svg>
           <h2>Documentation</h2>
           <p>Your questions, answered</p>
@@ -54,57 +55,42 @@ function App() {
             </li>
           </ul>
         </div>
+
         <div id="social">
           <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
+            <use href={`${base}icons.svg#social-icon`}></use>
           </svg>
           <h2>Connect with us</h2>
           <p>Join the Vite community</p>
           <ul>
             <li>
               <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
+                <svg className="button-icon" role="presentation" aria-hidden="true">
+                  <use href={`${base}icons.svg#github-icon`}></use>
                 </svg>
                 GitHub
               </a>
             </li>
             <li>
               <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
+                <svg className="button-icon" role="presentation" aria-hidden="true">
+                  <use href={`${base}icons.svg#discord-icon`}></use>
                 </svg>
                 Discord
               </a>
             </li>
             <li>
               <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
+                <svg className="button-icon" role="presentation" aria-hidden="true">
+                  <use href={`${base}icons.svg#x-icon`}></use>
                 </svg>
                 X.com
               </a>
             </li>
             <li>
               <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
+                <svg className="button-icon" role="presentation" aria-hidden="true">
+                  <use href={`${base}icons.svg#bluesky-icon`}></use>
                 </svg>
                 Bluesky
               </a>
