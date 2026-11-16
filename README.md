@@ -73,3 +73,7 @@ export default defineConfig([
 ])
 
 ```
+
+
+- Dependencies
+https://www.npmjs.com/package/trystero?activeTab=readme
