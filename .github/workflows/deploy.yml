@@ -23,10 +23,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: cards
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,7 +37,7 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-          cache-dependency-path: cards/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -52,7 +48,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-pages-artifact@v3
         with:
-          path: cards/dist
+          path: dist
 
       - name: Deploy
         id: deployment
