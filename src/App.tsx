@@ -4,9 +4,16 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
 
+import { useGetGameRoom } from './hooks/useGetGameRoom'
+import { useEffect } from 'react'
 function App() {
-  const [count, setCount] = useState(0)
+  // const [count, setCount] = useState(0)
   const base = import.meta.env.BASE_URL
+  const { connect, roomId, isHost, invitedRoomId, inviteLink } = useGetGameRoom('github.soundobj/cards')
+
+  useEffect(() => {
+    connect()
+  }, [connect])
 
   return (
     <>
@@ -17,91 +24,23 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test 123 <code>HMR</code>
-          </p>
+          <h1>isHost: {isHost ? 'true' : 'false'}</h1>
+          <h4>invitedRoomId: {invitedRoomId}</h4>
+          <h4>roomId: {roomId}</h4>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+        {inviteLink && (
+  <div>
+    <input readOnly value={inviteLink} />
+
+    <button
+      onClick={() => navigator.clipboard.writeText(inviteLink)}
+    >
+      Copy invite link
+    </button>
+  </div>
+)}
       </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href={`${base}icons.svg#documentation-icon`}></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href={`${base}icons.svg#social-icon`}></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href={`${base}icons.svg#github-icon`}></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href={`${base}icons.svg#discord-icon`}></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href={`${base}icons.svg#x-icon`}></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href={`${base}icons.svg#bluesky-icon`}></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+  </>
   )
 }
 
