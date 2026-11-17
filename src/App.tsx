@@ -1,44 +1,42 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
 
 import { useGetGameRoom } from './hooks/useGetGameRoom'
-import { useEffect } from 'react'
 function App() {
-  // const [count, setCount] = useState(0)
-  const base = import.meta.env.BASE_URL
-  const { connect, roomId, isHost, invitedRoomId, inviteLink } = useGetGameRoom('github.soundobj/cards')
-
-  useEffect(() => {
-    connect()
-  }, [connect])
+  // const base = import.meta.env.BASE_URL
+  const {
+    connect,
+    disconnect,
+    room,
+    isHost,
+    inviteLink,
+    loading,
+    error,
+  } = useGetGameRoom('github.soundobj/cards', 2)
 
   return (
     <>
       <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
         <div>
           <h1>isHost: {isHost ? 'true' : 'false'}</h1>
-          <h4>invitedRoomId: {invitedRoomId}</h4>
-          <h4>roomId: {roomId}</h4>
         </div>
-        {inviteLink && (
-  <div>
-    <input readOnly value={inviteLink} />
+        <h1>{isHost ? 'Create a game' : 'Join a game'}</h1>
 
-    <button
-      onClick={() => navigator.clipboard.writeText(inviteLink)}
-    >
-      Copy invite link
-    </button>
-  </div>
+<button onClick={connect} disabled={loading || !!room}>
+  {loading ? 'Connecting...' : 'Connect'}
+</button>
+
+{inviteLink && (
+  <button onClick={() => navigator.clipboard.writeText(inviteLink)}>
+    Copy invite link
+  </button>
 )}
+
+{error && <p>{error.message}</p>}
+
+{room && <p>Connected!</p>}
+
+<button onClick={disconnect}>Leave game</button>
+
       </section>
   </>
   )
