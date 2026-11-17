@@ -1,3 +1,6 @@
 minimumReleaseAge: 10080
-# minimumReleaseAgeExclude:
-  # - trystero
+
+minimumReleaseAgeExclude:
+  - trystero
+  - '@trystero-p2p/core'
+  - '@trystero-p2p/nostr'
