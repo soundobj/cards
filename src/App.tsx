@@ -23,6 +23,7 @@ function App() {
   return (
     <>
       <section id="center">
+        <h1>Make sure your VPN is off!!</h1>
         <h1>{isHost ? 'Create a game' : 'Join a game'}</h1>
 
         {!connected && (
