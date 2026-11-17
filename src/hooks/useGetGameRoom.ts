@@ -2,14 +2,6 @@
 import { joinRoom } from 'trystero'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-export const showInviteLink = (url: string) => {
-  console.log('Invite link:', url)
-}
-
-export const showBanner = (message: string) => {
-  console.log('Banner:', message)
-}
-
 type Player = {
   userId: string
   name: string
@@ -121,8 +113,6 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
 
         if (err.code === 'room-full' && alone) {
           const message = `This room is full. Maximum players: ${maxUsers}.`
-
-          showBanner(message)
           cleanupRoom()
           setError(new Error(message))
         }
@@ -130,8 +120,6 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
         if (err.code === 'decrypt-failed' && alone) {
           const message =
             'The invite link is invalid or has the wrong password.'
-
-          showBanner(message)
           setError(new Error(message))
         }
       })
@@ -210,7 +198,6 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
         url.hash = password
 
         setInviteLink(url.href)
-        showInviteLink(url.href)
       }
     } catch (err) {
       console.error('CONNECTION SETUP FAILED:', err)
