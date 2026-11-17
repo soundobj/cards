@@ -1,3 +1,4 @@
+
 import { joinRoom } from 'trystero'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -9,11 +10,18 @@ export const showBanner = (message: string) => {
   console.log('Banner:', message)
 }
 
+type Player = {
+  userId: string
+  name: string
+  isHost: boolean
+}
+
 export function useGetGameRoom(appId: string, maxUsers = 4) {
   const [roomId, setRoomId] = useState<string | null>(null)
   const [inviteLink, setInviteLink] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
+  const [players, setPlayers] = useState<Player[]>([])
 
   const [isHost] = useState(
     () => !new URL(window.location.href).searchParams.has('room')
@@ -25,9 +33,37 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
 
   const roomRef = useRef<ReturnType<typeof joinRoom> | null>(null)
   const connectingRef = useRef(false)
+  const unsubscribePlayersRef = useRef<(() => void) | null>(null)
 
-  const connect = useCallback(async () => {
+  // Centralised room cleanup.
+  // Pass false during component unmount to avoid unnecessary state updates.
+  const cleanupRoom = useCallback((updateState = true) => {
+    unsubscribePlayersRef.current?.()
+    unsubscribePlayersRef.current = null
+
+    const room = roomRef.current
+    roomRef.current = null
+
+    if (room) {
+      void room.leave()
+    }
+
+    if (updateState) {
+      setRoomId(null)
+      setInviteLink(null)
+      setPlayers([])
+    }
+  }, [])
+
+  const connect = useCallback(async (displayName: string) => {
     if (roomRef.current || connectingRef.current) return
+
+    const cleanName = displayName.trim().slice(0, 24)
+
+    if (!cleanName) {
+      setError(new Error('Please enter your name before connecting.'))
+      return
+    }
 
     connectingRef.current = true
     setLoading(true)
@@ -60,6 +96,7 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
       console.log('App ID:', appId)
       console.log('Host:', isHost)
       console.log('Maximum players:', maxUsers)
+      console.log('Display name:', cleanName)
 
       const room = joinRoom(
         {
@@ -84,19 +121,16 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
 
         if (err.code === 'room-full' && alone) {
           const message = `This room is full. Maximum players: ${maxUsers}.`
+
           showBanner(message)
+          cleanupRoom()
           setError(new Error(message))
-
-          void room.leave()
-
-          if (roomRef.current === room) {
-            roomRef.current = null
-            setRoomId(null)
-          }
         }
 
         if (err.code === 'decrypt-failed' && alone) {
-          const message = 'The invite link is invalid or has the wrong password.'
+          const message =
+            'The invite link is invalid or has the wrong password.'
+
           showBanner(message)
           setError(new Error(message))
         }
@@ -126,6 +160,46 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
       const self = await room.getSelf()
 
       console.log('MY IDENTITY:', self)
+
+      // Create shared player profile state.
+      const playerState = room.makeUserState('player-profile', {
+        name: cleanName,
+        isHost,
+      })
+
+      // Update the local player list.
+      const updatePlayers = () => {
+        const allPlayers = playerState.getAll()
+
+        const updatedPlayers = Object.entries(allPlayers).map(
+          ([userId, profile]) => ({
+            userId,
+            name: profile.name,
+            isHost: profile.isHost,
+          })
+        )
+
+        updatedPlayers.sort(
+          (a, b) => Number(b.isHost) - Number(a.isHost)
+        )
+
+        setPlayers(updatedPlayers)
+      }
+
+      // Subscribe to existing and future player profiles.
+      unsubscribePlayersRef.current = playerState.onChange(
+        updatePlayers,
+        { replay: true }
+      )
+
+      // Publish this player's profile.
+      playerState.set({
+        name: cleanName,
+        isHost,
+      })
+
+      updatePlayers()
+
       console.log('ROOM USERS:', room.getUsers())
       console.log('ROOM PEERS:', room.getPeers())
 
@@ -141,10 +215,7 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
     } catch (err) {
       console.error('CONNECTION SETUP FAILED:', err)
 
-      if (roomRef.current) {
-        void roomRef.current.leave()
-        roomRef.current = null
-      }
+      cleanupRoom()
 
       setError(
         err instanceof Error
@@ -155,32 +226,19 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
       connectingRef.current = false
       setLoading(false)
     }
-  }, [appId, maxUsers, isHost, invitedRoomId])
+  }, [appId, maxUsers, isHost, invitedRoomId, cleanupRoom])
 
   const disconnect = useCallback(() => {
-    const room = roomRef.current
-
-    roomRef.current = null
-
-    if (room) {
-      void room.leave()
-    }
-
-    setRoomId(null)
-    setInviteLink(null)
+    cleanupRoom()
     setError(null)
-  }, [])
+  }, [cleanupRoom])
 
+  // Clean up when the component unmounts.
   useEffect(() => {
     return () => {
-      const room = roomRef.current
-      roomRef.current = null
-
-      if (room) {
-        void room.leave()
-      }
+      cleanupRoom(false)
     }
-  }, [])
+  }, [cleanupRoom])
 
   return {
     connect,
@@ -192,5 +250,6 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
     loading,
     error,
     room: roomRef.current,
+    players,
   }
 }

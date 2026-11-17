@@ -77,3 +77,10 @@ export default defineConfig([
 
 - Dependencies
 https://www.npmjs.com/package/trystero?activeTab=readme
+
+
+Cloudflare Workers https://developers.cloudflare.com/realtime/turn/faq/?utm_source=chatgpt.com (to keep the Metered TURN secret )
+
+Metered TURN https://www.metered.ca/tools/openrelay/?utm_source=chatgpt.com ( allows for reliable connections TURN WebRTC)
+
+peer-connect-failed could not connect to peer I8uajkhsXDlsLoQRECMi after exchanging SDP; configure TURN via turnConfig or rtcConfig.iceServers {code: 'peer-connect-failed', peerId: 'I8uajkhsXDlsLoQRECMi', turnConfigured: false, message: 'could not connect to peer I8uajkhsXDlsLoQRECMi aft…igure TURN via turnConfig or rtcConfig.iceServers', appId: 'github.soundobj/cards', …}appId: "github.soundobj/cards"code: "peer-connect-failed"message: "could not connect to peer I8uajkhsXDlsLoQRECMi after exchanging SDP; configure TURN via turnConfig or rtcConfig.iceServers"peerId: "I8uajkhsXDlsLoQRECMi"roomId: "party-2b62bc74"turnConfigured: false[[Prototype]]: Object
