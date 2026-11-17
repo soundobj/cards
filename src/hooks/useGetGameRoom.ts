@@ -9,7 +9,6 @@ type Player = {
 }
 
 export function useGetGameRoom(appId: string, maxUsers = 4) {
-  const [roomId, setRoomId] = useState<string | null>(null)
   const [inviteLink, setInviteLink] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -41,7 +40,6 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
     }
 
     if (updateState) {
-      setRoomId(null)
       setInviteLink(null)
       setPlayers([])
     }
@@ -67,7 +65,7 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
       ? crypto.randomUUID()
       : url.hash.slice(1)
 
-    const newRoomId = isHost
+    const roomId = isHost
       ? `party-${crypto.randomUUID().slice(0, 8)}`
       : invitedRoomId
 
@@ -76,7 +74,7 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
         throw new Error('Maximum players must be at least 1.')
       }
 
-      if (!newRoomId) {
+      if (!roomId) {
         throw new Error('Invite link is missing its room ID.')
       }
 
@@ -84,7 +82,7 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
         throw new Error('Invite link is missing its password.')
       }
 
-      console.log('Connecting to room:', newRoomId)
+      console.log('Connecting to room:', roomId)
       console.log('App ID:', appId)
       console.log('Host:', isHost)
       console.log('Maximum players:', maxUsers)
@@ -96,7 +94,7 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
           password,
           maxUsers,
         },
-        newRoomId
+        roomId
       )
 
       roomRef.current = room
@@ -191,10 +189,8 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
       console.log('ROOM USERS:', room.getUsers())
       console.log('ROOM PEERS:', room.getPeers())
 
-      setRoomId(newRoomId)
-
       if (isHost) {
-        url.searchParams.set('room', newRoomId)
+        url.searchParams.set('room', roomId)
         url.hash = password
 
         setInviteLink(url.href)
@@ -230,10 +226,8 @@ export function useGetGameRoom(appId: string, maxUsers = 4) {
   return {
     connect,
     disconnect,
-    roomId,
     inviteLink,
     isHost,
-    invitedRoomId,
     loading,
     error,
     room: roomRef.current,
