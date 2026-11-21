@@ -36,3 +36,10 @@ export const shuffleDeck = (cards: Card[]): Card[] => {
 
   return shuffled;
 };
+
+export const removeCard = <T extends Card>(
+  cards: T[],
+  cardId: Card["id"],
+): T[] => cards.filter((card) => card.id !== cardId);
+
+

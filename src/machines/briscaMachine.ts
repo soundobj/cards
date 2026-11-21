@@ -4,7 +4,7 @@ import {
   type BriscaCard,
   briscaDeck,
 } from "../spanishDeck/games/brisca/brisca";
-import {  shuffleDeck } from "../spanishDeck/spanishDeck";
+import { shuffleDeck } from "../spanishDeck/spanishDeck";
 
 export const briscaMachine = setup({
   actors: {
