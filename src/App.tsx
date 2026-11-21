@@ -3,6 +3,8 @@ import { useState } from 'react'
 import './App.css'
 
 import { useGetGameRoom } from './hooks/useGetGameRoom'
+import { briscaMachine } from './machines/briscaMachine'
+import { useMachine } from '@xstate/react'
 
 function App() {
   const [displayName, setDisplayName] = useState('')
@@ -18,6 +20,8 @@ function App() {
     players,
   } = useGetGameRoom('github.soundobj/cards', 2)
 
+  const [state, send] = useMachine(briscaMachine);
+
   const connected = !!room
 
   return (
@@ -25,6 +29,7 @@ function App() {
       <section id="center">
         <h1>Make sure your VPN is off!!</h1>
         <h1>{isHost ? 'Create a game' : 'Join a game'}</h1>
+        <button onClick={() => send({ type: "prepareGame"})} >startGame</button>
 
         {!connected && (
           <>

@@ -16,7 +16,7 @@
     - if no cards of the game's suit is thrown, whichever first card suit was thrown is the round's suit,
     - the card with more points of the round's suit wins the round. if no cards with points are thrown then the highest number card of the round's suit wins
 
-    D) DEALING A ROUND
+    D) DEALING A HAND
     - for each player a card is distributed until the stack is consumed
     - whoever won the last hand gets the first card, all other players follow in a clockwise direction
     - when the last hand is reached, the visible card is also dealt
@@ -31,4 +31,43 @@ const points = [
     { '11': 3 },
     { '10': 2 },
 ];
+
+
+/*
+
+Player
+    - id
+    - name
+    - playingCards
+    - wonCards
+    - isWinner
+
+Deck
+    - cards
+
+Actions:
+
+    startGame
+        - shuffleDeck
+        - dealCards(players[], deck)
+        - selectNextPlayer
+
+    playHand
+        - throwCard(playerId, cardId)
+        - selectNextPlayer
+
+    assesHandWinner
+        - awardCardsToWinner(playerId)
+        - dealCards(players[], deck)
+        - selectNextPlayer
+
+    endGame
+        countPlayersPoints(players[])
+        setWinner(players[], id)
+
+
+    
+
+
+*/
 
