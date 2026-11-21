@@ -73,9 +73,4 @@ Actions:
     endGame
         countPlayersPoints(players[])
         setWinner(players[], id)
-
-
-    
-
-
 */
