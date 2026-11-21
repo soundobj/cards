@@ -43,3 +43,7 @@ export const removeCard = <T extends Card>(
 ): T[] => cards.filter((card) => card.id !== cardId);
 
 
+export const getCard = <T extends Card>(
+  cards: T[],
+  index: number,
+): T => cards[index];

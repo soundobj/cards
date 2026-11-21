@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, jest, test } from "@jest/globals";
 import {
   createDeck,
+  getCard,
   removeCard,
   shuffleDeck,
   spanishDeck,
@@ -22,6 +23,16 @@ describe("Spanish deck", () => {
 
   test("spanishDeck contains the generated Spanish deck", () => {
     expect(spanishDeck).toEqual(createDeck());
+  });
+
+  test("getCard returns the last card of the deck", () => {
+    const deck = createDeck();
+
+    expect(getCard(deck, deck.length - 1)).toEqual({
+      id: "12-b",
+      rank: "12",
+      suit: "b",
+    });
   });
 
   test("shuffleDeck returns a shuffled copy and preserves all cards", () => {

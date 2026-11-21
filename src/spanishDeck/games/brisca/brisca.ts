@@ -9,11 +9,41 @@ const points: Partial<Record<Card["rank"], number>> = {
   };
   
   export type BriscaCard = Card & { points: number };
+
+  export type PlayedCard = BriscaCard & { playerId: number };
   
   export const briscaDeck: BriscaCard[] = spanishDeck.map((card) => ({
     ...card,
     points: points[card.rank] ?? 0,
   }));
+
+  export const getHandCards = <T extends Card>(
+    cards: T[],
+    playersLength: number,
+  ): [T[], T[]] => {
+    const dealtCards = cards.slice(0, playersLength);
+    const remainingDeckCards = cards.slice(playersLength);
+
+    return [remainingDeckCards, dealtCards];
+  };
+
+  export const getHandSuit = (hand: PlayedCard[], gameSuitId: Card["suit"]): string => {
+    const cardsWithGameSuit = hand.filter((card) => card.suit === gameSuitId);
+    return cardsWithGameSuit.length > 0 ? gameSuitId : hand[0].suit;
+  }
+
+  export const getHandWinner = (hand: PlayedCard[], gameSuitId: Card["suit"]): number => {
+    const handSuit = getHandSuit(hand, gameSuitId);
+    const suitCards = hand.filter((card) => card.suit === handSuit);
+    const pointCards = suitCards.filter((card) => card.points > 0);
+    const cardsToRank = pointCards.length > 0 ? pointCards : suitCards;
+
+    return cardsToRank.sort((first, second) =>
+      pointCards.length > 0
+        ? second.points - first.points
+        : Number(second.rank) - Number(first.rank),
+    )[0].playerId;
+  };
 
 /*
     RULES:
