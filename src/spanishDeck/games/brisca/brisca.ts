@@ -1,3 +1,20 @@
+import { spanishDeck, type Card } from "../../spanishDeck";
+
+const points: Partial<Record<Card["rank"], number>> = {
+    "1": 11,
+    "3": 10,
+    "12": 4,
+    "11": 3,
+    "10": 2,
+  };
+  
+  export type BriscaCard = Card & { points: number };
+  
+  export const briscaDeck: BriscaCard[] = spanishDeck.map((card) => ({
+    ...card,
+    points: points[card.rank] ?? 0,
+  }));
+
 /*
     RULES:
 
@@ -24,14 +41,6 @@
     E) WINNING THE GAME
     - each players cards with points are summed up. the highest score wins, draws can also happen.
 */
-const points = [
-    { '1': 11 },
-    { '3': 10 },
-    { '12': 4 },
-    { '11': 3 },
-    { '10': 2 },
-];
-
 
 /*
 
@@ -70,4 +79,3 @@ Actions:
 
 
 */
-
