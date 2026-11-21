@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 import { useGetGameRoom } from './hooks/useGetGameRoom'
@@ -20,7 +20,18 @@ function App() {
     players,
   } = useGetGameRoom('github.soundobj/cards', 2)
 
-  const [state, send] = useMachine(briscaMachine);
+  const [state, send, actorRef] = useMachine(briscaMachine);
+
+  useEffect(() => {
+    console.log("🎮 Initial state:", actorRef.getSnapshot().value);
+  
+    const subscription = actorRef.subscribe((snapshot) => {
+      console.log("🎮 STATE:", snapshot.value);
+      console.log("📦 CONTEXT:", snapshot.context);
+    });
+  
+    return () => subscription.unsubscribe();
+  }, [actorRef]);
 
   const connected = !!room
 
