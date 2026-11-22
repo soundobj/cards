@@ -52,7 +52,21 @@ const points: Partial<Record<Card["rank"], number>> = {
     return [...players.slice(winnerIndex), ...players.slice(0, winnerIndex)];
   };
 
-  export const handCardsToPlayers = <T extends Card>(
+  export const findWinner = (players: Player[]): Player[] => {
+    if (players.length === 0) return [];
+
+    const playersWithPoints = players.map((player) => ({
+      player,
+      points: player.wonCards.reduce((total, card) => total + card.points, 0),
+    }));
+    const highestScore = Math.max(...playersWithPoints.map(({ points }) => points));
+
+    return playersWithPoints
+      .filter(({ points }) => points === highestScore)
+      .map(({ player }) => player);
+  };
+
+  export const getNextHandCards = <T extends Card>(
     cards: T[],
     playersLength: number,
   ): [T[], T[]] => {

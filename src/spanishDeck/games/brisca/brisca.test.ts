@@ -1,8 +1,53 @@
 import { describe, expect, test } from "@jest/globals";
 import { createDeck } from "../../spanishDeck";
-import { getHandCards, getHandSuit, getHandWinner, handCardsToPlayers, setPlayersTurn, type PlayedCard, type Player } from "./brisca";
+import { findWinner, getHandCards, getHandSuit, getHandWinner, getNextHandCards, setPlayersTurn, type BriscaCard, type PlayedCard, type Player } from "./brisca";
 
 describe("Brisca", () => {
+  describe("findWinner", () => {
+    const cardWithPoints = (id: BriscaCard["id"], points: number): BriscaCard => {
+      const [rank, suit] = id.split("-") as [BriscaCard["rank"], BriscaCard["suit"]];
+      return { id, rank, suit, points };
+    };
+
+    test("returns the player with the highest total points in won cards", () => {
+      const players: Player[] = [
+        { id: 0, name: "Player 0", wonCards: [cardWithPoints("1-c", 11)], cards: [] },
+        { id: 1, name: "Player 1", wonCards: [cardWithPoints("3-s", 10), cardWithPoints("10-b", 2)], cards: [] },
+        { id: 2, name: "Player 2", wonCards: [cardWithPoints("12-g", 4)], cards: [] },
+      ];
+
+      expect(findWinner(players)).toEqual([players[1]]);
+    });
+
+    test("returns undefined when there are no players", () => {
+      expect(findWinner([])).toEqual([]);
+    });
+
+    test("returns all players tied for the highest score", () => {
+      const firstPlayer: Player = {
+        id: 0,
+        name: "Player 0",
+        wonCards: [cardWithPoints("1-c", 11)],
+        cards: [],
+      };
+      const secondPlayer: Player = {
+        id: 1,
+        name: "Player 1",
+        wonCards: [cardWithPoints("3-s", 10), cardWithPoints("10-b", 1)],
+        cards: [],
+      };
+
+      const thirdPlayer: Player = {
+        id: 2,
+        name: "Player 2",
+        wonCards: [cardWithPoints("3-c", 10)],
+        cards: [],
+      };
+
+      expect(findWinner([firstPlayer, secondPlayer, thirdPlayer])).toEqual([firstPlayer, secondPlayer]);
+    });
+  });
+
   describe("setPlayersTurn", () => {
     const makePlayers = (count: number): Player[] =>
       Array.from({ length: count }, (_, id) => ({ id, name: `Player ${id}`, wonCards: [], cards: [] }));
@@ -31,11 +76,11 @@ describe("Brisca", () => {
 
   });
 
-  test("handCardsToPlayers returns one card per player and the remaining cards", () => {
+  test("getNextHandCards returns one card per player and the remaining cards", () => {
     const cards = createDeck();
     const originalCards = [...cards];
 
-    const [dealtCards, remainingCards] = handCardsToPlayers(cards, 3);
+    const [dealtCards, remainingCards] = getNextHandCards(cards, 3);
 
     expect(dealtCards).toEqual(originalCards.slice(0, 3));
     expect(remainingCards).toEqual(originalCards.slice(3));
