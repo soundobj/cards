@@ -11,6 +11,13 @@ const points: Partial<Record<Card["rank"], number>> = {
   export type BriscaCard = Card & { points: number };
 
   export type PlayedCard = BriscaCard & { playerId: number };
+
+  export type Player = {
+    id: number,
+    name: string,
+    wonCards: BriscaCard[],
+    cards: BriscaCard[],
+  } 
   
   export const briscaDeck: BriscaCard[] = spanishDeck.map((card) => ({
     ...card,
@@ -31,6 +38,28 @@ const points: Partial<Record<Card["rank"], number>> = {
     const cardsWithGameSuit = hand.filter((card) => card.suit === gameSuitId);
     return cardsWithGameSuit.length > 0 ? gameSuitId : hand[0].suit;
   }
+
+  export const setPlayersTurn = (lastHandWinnerId: number, players: Player[]): Player[] => {
+    /* move the winner to the beginning and keep the clockwise direction
+      winner is 0 then order is 0 1 2 3
+      winner is 2 then  order is 2 3 0 1
+      winner is 1 then order is 1 2 3 0
+    */
+    const winnerIndex = players.findIndex((player) => player.id === lastHandWinnerId);
+
+    if (winnerIndex === -1) return [...players];
+
+    return [...players.slice(winnerIndex), ...players.slice(0, winnerIndex)];
+  };
+
+  export const handCardsToPlayers = <T extends Card>(
+    cards: T[],
+    playersLength: number,
+  ): [T[], T[]] => {
+    const dealtCards = cards.slice(0, playersLength);
+    const remainingDeckCards = cards.slice(playersLength);
+    return [dealtCards, remainingDeckCards];
+  };
 
   export const getHandWinner = (hand: PlayedCard[], gameSuitId: Card["suit"]): number => {
     const handSuit = getHandSuit(hand, gameSuitId);

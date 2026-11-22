@@ -1,8 +1,24 @@
 import { describe, expect, test } from "@jest/globals";
 import { createDeck } from "../../spanishDeck";
-import { getHandCards, getHandSuit, getHandWinner, type PlayedCard } from "./brisca";
+import { getHandCards, getHandSuit, getHandWinner, handCardsToPlayers, setPlayersTurn, type PlayedCard, type Player } from "./brisca";
 
 describe("Brisca", () => {
+  describe("setPlayersTurn", () => {
+    const makePlayers = (count: number): Player[] =>
+      Array.from({ length: count }, (_, id) => ({ id, name: `Player ${id}`, wonCards: [], cards: [] }));
+
+    test.each([
+      [2, 1, [1, 0]],
+      [3, 2, [2, 0, 1]],
+      [4, 1, [1, 2, 3, 0]],
+    ])("rotates the order clockwise for %i players after player %i wins", (count, winnerId, expectedIds) => {
+      const players = makePlayers(count);
+
+      expect(setPlayersTurn(winnerId, players).map(({ id }) => id)).toEqual(expectedIds);
+      expect(players.map(({ id }) => id)).toEqual(Array.from({ length: count }, (_, id) => id));
+    });
+  });
+
   test("getHandCards removes one card per player and returns the dealt cards", () => {
     const cards = createDeck();
     const originalCards = [...cards];
@@ -13,6 +29,17 @@ describe("Brisca", () => {
     expect(remainingDeckCards).toEqual(originalCards.slice(3));
     expect(cards).toEqual(originalCards);
 
+  });
+
+  test("handCardsToPlayers returns one card per player and the remaining cards", () => {
+    const cards = createDeck();
+    const originalCards = [...cards];
+
+    const [dealtCards, remainingCards] = handCardsToPlayers(cards, 3);
+
+    expect(dealtCards).toEqual(originalCards.slice(0, 3));
+    expect(remainingCards).toEqual(originalCards.slice(3));
+    expect(cards).toEqual(originalCards);
   });
 
   describe("getHandSuit", () => {
