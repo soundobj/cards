@@ -2,6 +2,7 @@
 import { assign, setup, fromPromise } from "xstate";
 import {
   type BriscaCard,
+  type Player,
   briscaDeck,
 } from "../spanishDeck/games/brisca/brisca";
 import { shuffleDeck } from "../spanishDeck/spanishDeck";
@@ -34,6 +35,13 @@ export const briscaMachine = setup({
   initial: "START_GAME",
   context: {
     deck: [] as BriscaCard[],
+    players: null as Player[] | null,
+  },
+
+  on: {
+    setPlayers: {
+      actions: assign({ players: ({ event }) => event.players }),
+    },
   },
 
   states: {
@@ -47,7 +55,7 @@ export const briscaMachine = setup({
       invoke: {
         src: "prepareGame",
         onDone: {
-          target: "GAME_STARTED",
+          target: "PLAYING_GAME",
           actions: [
             assign({ deck: ({ event }) => event.output.deck }),
             "consoleLogDeck",
@@ -59,6 +67,6 @@ export const briscaMachine = setup({
       },
     },
 
-    GAME_STARTED: {},
+    PLAYING_GAME: {},
   },
 });

@@ -5,6 +5,21 @@ import './App.css'
 import { useGetGameRoom } from './hooks/useGetGameRoom'
 import { briscaMachine } from './machines/briscaMachine'
 import { useMachine } from '@xstate/react'
+import type { Player } from './spanishDeck/games/brisca/brisca'
+
+const playerO: Player = {
+  id: 0,
+  name: 'papi',
+  wonCards: [],
+  cards: [],
+}
+
+const player1 : Player = {
+  id: 1,
+  name: 'pichi',
+  wonCards: [],
+  cards: []
+};
 
 function App() {
   const [displayName, setDisplayName] = useState('')
@@ -23,6 +38,10 @@ function App() {
   const [state, send, actorRef] = useMachine(briscaMachine);
 
   useEffect(() => {
+    send({ type: 'setPlayers', players: [playerO, player1] })
+  }, [send])
+
+  useEffect(() => {
     console.log("🎮 Initial state:", actorRef.getSnapshot().value);
   
     const subscription = actorRef.subscribe((snapshot) => {
@@ -38,6 +57,14 @@ function App() {
   return (
     <>
       <section id="center">
+        <div>
+        <div id="player0">
+              <h3>player 0: {playerO.name}</h3>
+            </div>
+            <div id="player1">
+            <h3>player 1: {player1.name}</h3>
+              </div>
+        </div>
         <h1>Make sure your VPN is off!!</h1>
         <h1>{isHost ? 'Create a game' : 'Join a game'}</h1>
         <button onClick={() => send({ type: "prepareGame"})} >startGame</button>
