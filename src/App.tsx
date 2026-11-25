@@ -38,10 +38,6 @@ function App() {
   const [state, send, actorRef] = useMachine(briscaMachine);
 
   useEffect(() => {
-    send({ type: 'setPlayers', players: [playerO, player1] })
-  }, [send])
-
-  useEffect(() => {
     console.log("🎮 Initial state:", actorRef.getSnapshot().value);
   
     const subscription = actorRef.subscribe((snapshot) => {
@@ -67,7 +63,11 @@ function App() {
         </div>
         <h1>Make sure your VPN is off!!</h1>
         <h1>{isHost ? 'Create a game' : 'Join a game'}</h1>
-        <button onClick={() => send({ type: "prepareGame"})} >startGame</button>
+        <button
+          onClick={() => send({ type: 'prepareGame', players: [playerO, player1] })}
+        >
+          startGame
+        </button>
 
         {!connected && (
           <>

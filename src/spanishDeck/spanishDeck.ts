@@ -26,7 +26,7 @@ export const createDeck = (): Card[] =>
 
 export const spanishDeck = createDeck();
 
-export const shuffleDeck = (cards: Card[]): Card[] => {
+export const shuffleDeck = <T extends Card>(cards: T[]): T[] => {
   const shuffled = [...cards];
 
   for (let index = shuffled.length - 1; index > 0; index -= 1) {

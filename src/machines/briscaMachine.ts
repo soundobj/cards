@@ -4,21 +4,24 @@ import {
   type BriscaCard,
   type Player,
   briscaDeck,
+  dealCards,
 } from "../spanishDeck/games/brisca/brisca";
 import { shuffleDeck } from "../spanishDeck/spanishDeck";
 
 export const briscaMachine = setup({
   actors: {
-    prepareGame: fromPromise(async () => {
-      console.log("Preparing Brisca game...", { briscaDeck });
+    prepareGame: fromPromise(
+      async ({ input }: { input: { players: Player[] } }) => {
+        let deck: BriscaCard[] = shuffleDeck(briscaDeck);
+        let players: Player[] = [];
 
-      // Put your game preparation logic here:
-      // Shuffle cards
-      // Deal cards
-      // Choose trump card
+        for (let hand = 0; hand < 3; hand += 1) {
+          [deck, players] = dealCards(deck, input.players);
+        }
 
-      return { deck: shuffleDeck(briscaDeck) };
-    }),
+        return { deck, players };
+      },
+    ),
   },
 
   actions: {
@@ -38,26 +41,25 @@ export const briscaMachine = setup({
     players: null as Player[] | null,
   },
 
-  on: {
-    setPlayers: {
-      actions: assign({ players: ({ event }) => event.players }),
-    },
-  },
-
   states: {
     START_GAME: {
       on: {
-        prepareGame: "GAME_PREP",
+        prepareGame: {
+          target: "GAME_PREP",
+          actions: assign({ players: ({ event }) => event.players }),
+        },
       },
     },
 
     GAME_PREP: {
       invoke: {
         src: "prepareGame",
+        input: ({ context }) => ({ players: context.players ?? [] }),
         onDone: {
           target: "PLAYING_GAME",
           actions: [
             assign({ deck: ({ event }) => event.output.deck }),
+            assign({ players: ({ event }) => event.output.players }),
             "consoleLogDeck",
           ],
         },

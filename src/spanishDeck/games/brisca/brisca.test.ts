@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { createDeck } from "../../spanishDeck";
-import { findWinner, getHandCards, getHandSuit, getHandWinner, getNextHandCards, setPlayersTurn, type BriscaCard, type PlayedCard, type Player } from "./brisca";
+import { briscaDeck, dealCards, findWinner, getHandCards, getHandSuit, getHandWinner, getNextHandCards, setPlayersTurn, type BriscaCard, type PlayedCard, type Player } from "./brisca";
 
 describe("Brisca", () => {
   describe("findWinner", () => {
@@ -19,7 +19,7 @@ describe("Brisca", () => {
       expect(findWinner(players)).toEqual([players[1]]);
     });
 
-    test("returns undefined when there are no players", () => {
+    test("returns an empty list when there are no players", () => {
       expect(findWinner([])).toEqual([]);
     });
 
@@ -85,6 +85,25 @@ describe("Brisca", () => {
     expect(dealtCards).toEqual(originalCards.slice(0, 3));
     expect(remainingCards).toEqual(originalCards.slice(3));
     expect(cards).toEqual(originalCards);
+  });
+
+  test("dealCards gives one BriscaCard to each player and returns the remaining deck", () => {
+    const deck = [...briscaDeck];
+    const originalDeck = [...deck];
+    const players: Player[] = [
+      { id: 0, name: "Player 0", wonCards: [], cards: [] },
+      { id: 1, name: "Player 1", wonCards: [], cards: [] },
+      { id: 2, name: "Player 2", wonCards: [], cards: [] },
+    ];
+
+    const [remainingDeck, updatedPlayers] = dealCards(deck, players);
+
+    expect(updatedPlayers).toBe(players);
+    expect(updatedPlayers.map(({ cards }) => cards)).toEqual(
+      originalDeck.slice(0, players.length).map((card) => [card]),
+    );
+    expect(remainingDeck).toEqual(originalDeck.slice(players.length));
+    expect(deck).toEqual(originalDeck);
   });
 
   describe("getHandSuit", () => {

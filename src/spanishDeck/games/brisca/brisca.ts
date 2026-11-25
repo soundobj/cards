@@ -18,6 +18,20 @@ const points: Partial<Record<Card["rank"], number>> = {
     wonCards: BriscaCard[],
     cards: BriscaCard[],
   } 
+
+  export const dealCards = (
+    deck: BriscaCard[],
+    players: Player[],
+  ): [BriscaCard[], Player[]] => {
+    const [handCards, remainingCards] = getNextHandCards(deck, players.length);
+
+    players.forEach((player, i) => {
+      const card = handCards[i];
+      if (card) player.cards.push(card);
+    });
+
+    return [remainingCards, players];
+  };
   
   export const briscaDeck: BriscaCard[] = spanishDeck.map((card) => ({
     ...card,
