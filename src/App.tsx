@@ -5,7 +5,7 @@ import './App.css'
 import { useGetGameRoom } from './hooks/useGetGameRoom'
 import { briscaMachine } from './machines/briscaMachine'
 import { useMachine } from '@xstate/react'
-import type { Player } from './spanishDeck/games/brisca/brisca'
+import { getGameStats, type Player } from './spanishDeck/games/brisca/brisca'
 import PlayerHand from './PlayerHand/PlayerHand'
 import Table from './Table/Table'
 
@@ -61,15 +61,7 @@ function App() {
     ? gamePlayers.find((player) => player.id === state.context.handWinnerId)?.name ?? null
     : null
   const gameStats = state.matches({ PLAYING_GAME: 'GAME_OVER' })
-    ? (state.context.players ?? [])
-        .map((player) => ({
-          playerId: player.id,
-          name: player.name,
-          points: player.wonCards.reduce((total, card) => total + card.points, 0),
-          isWinner: state.context.winners.some((winner) => winner.id === player.id),
-          wonCards: player.wonCards,
-        }))
-        .sort((first, second) => Number(second.isWinner) - Number(first.isWinner) || second.points - first.points)
+    ? getGameStats(state.context.players ?? [])
     : []
 
   return (

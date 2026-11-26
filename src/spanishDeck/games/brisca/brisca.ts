@@ -19,6 +19,14 @@ const points: Partial<Record<Card["rank"], number>> = {
     cards: BriscaCard[],
   } 
 
+  export type GameStat = {
+    playerId: number;
+    name: string;
+    points: number;
+    isWinner: boolean;
+    wonCards: BriscaCard[];
+  };
+
   export const resetPlayers = (players: Player[]): Player[] =>
     players.map((player) => ({
       ...player,
@@ -100,6 +108,20 @@ const points: Partial<Record<Card["rank"], number>> = {
     return playersWithPoints
       .filter(({ points }) => points === highestScore)
       .map(({ player }) => player);
+  };
+
+  export const getGameStats = (players: Player[]): GameStat[] => {
+    const winnerIds = new Set(findWinner(players).map((player) => player.id));
+
+    return players
+      .map((player) => ({
+        playerId: player.id,
+        name: player.name,
+        points: player.wonCards.reduce((total, card) => total + card.points, 0),
+        isWinner: winnerIds.has(player.id),
+        wonCards: player.wonCards,
+      }))
+      .sort((first, second) => Number(second.isWinner) - Number(first.isWinner) || second.points - first.points);
   };
 
   export const sortWonCards = (cards: BriscaCard[]): BriscaCard[] =>

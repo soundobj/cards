@@ -1,14 +1,6 @@
 import "./GameResults.css";
 import Card from "../Card/Card";
-import { sortWonCards, type BriscaCard } from "../spanishDeck/games/brisca/brisca";
-
-export type GameStat = {
-  playerId: number;
-  name: string;
-  points: number;
-  isWinner: boolean;
-  wonCards: BriscaCard[];
-};
+import { sortWonCards, type GameStat } from "../spanishDeck/games/brisca/brisca";
 
 export type GameResultsProps = {
   stats: GameStat[];
