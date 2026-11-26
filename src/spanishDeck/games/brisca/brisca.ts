@@ -102,6 +102,11 @@ const points: Partial<Record<Card["rank"], number>> = {
       .map(({ player }) => player);
   };
 
+  export const sortWonCards = (cards: BriscaCard[]): BriscaCard[] =>
+    cards
+      .filter((card) => card.points > 0)
+      .sort((first, second) => second.points - first.points);
+
   export const getNextHandCards = <T extends Card>(
     cards: T[],
     playersLength: number,

@@ -52,6 +52,83 @@
   font-weight: 800;
 }
 
+.game-results__player {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: help;
+  font: inherit;
+  padding: 0;
+  position: relative;
+  text-align: left;
+}
+
+.game-results__player:focus-visible {
+  border-radius: 0.2rem;
+  outline: 2px solid #edc36c;
+  outline-offset: 2px;
+}
+
+.game-results__tooltip {
+  background: #fff;
+  border: 2px solid #edc36c;
+  border-radius: 0.6rem;
+  box-shadow: 0 0.4rem 1rem rgb(0 0 0 / 30%);
+  color: #18372b;
+  cursor: default;
+  display: none;
+  flex-direction: column;
+  left: 50%;
+  max-width: 80vw;
+  padding: 0.5rem;
+  position: absolute;
+  text-align: center;
+  top: calc(100% + 0.5rem);
+  transform: translateX(-50%);
+  width: max-content;
+  z-index: 6;
+}
+
+.game-results__player:focus-visible .game-results__tooltip,
+.game-results__player:hover .game-results__tooltip {
+  display: flex;
+}
+
+.game-results__tooltip-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.game-results__tooltip-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.game-results__tooltip-card {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7rem;
+  gap: 0.15rem;
+}
+
+.game-results__tooltip-card .playing-card {
+  height: 3.25rem;
+  width: 2.25rem;
+}
+
+.game-results__tooltip-card .playing-card__rank {
+  font-size: 1.25rem;
+}
+
+.game-results__tooltip-card .playing-card__suit {
+  font-size: 1.3rem;
+}
+
 @keyframes reveal-game-results {
   0% {
     opacity: 0;

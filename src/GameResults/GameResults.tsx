@@ -1,10 +1,13 @@
 import "./GameResults.css";
+import Card from "../Card/Card";
+import { sortWonCards, type BriscaCard } from "../spanishDeck/games/brisca/brisca";
 
 export type GameStat = {
   playerId: number;
   name: string;
   points: number;
   isWinner: boolean;
+  wonCards: BriscaCard[];
 };
 
 export type GameResultsProps = {
@@ -23,15 +26,40 @@ export function GameResults({ stats }: GameResultsProps) {
       <table>
         <caption>Game results</caption>
         <tbody>
-          {stats.map((stat) => (
-            <tr className={stat.isWinner ? "game-results__winner" : undefined} key={stat.playerId}>
-              <th scope="row">
-                {stat.isWinner && <span aria-hidden="true">🏆 </span>}
-                {stat.name}
-              </th>
-              <td>{stat.points} points</td>
-            </tr>
-          ))}
+          {stats.map((stat) => {
+            const sortedWonCards = sortWonCards(stat.wonCards);
+
+            return (
+              <tr className={stat.isWinner ? "game-results__winner" : undefined} key={stat.playerId}>
+                <th scope="row">
+                  <button
+                    aria-describedby={`won-cards-${stat.playerId}`}
+                    className="game-results__player"
+                    type="button"
+                  >
+                    {stat.isWinner && <span aria-hidden="true">🏆 </span>}
+                    {stat.name}
+                    <span className="game-results__tooltip" id={`won-cards-${stat.playerId}`} role="tooltip">
+                      <span className="game-results__tooltip-title">Point cards won</span>
+                      {sortedWonCards.length > 0 ? (
+                        <span className="game-results__tooltip-cards">
+                          {sortedWonCards.map((card) => (
+                            <span className="game-results__tooltip-card" key={card.id}>
+                              <Card rank={card.rank} suit={card.suit} />
+                              <span>{card.points} pts</span>
+                            </span>
+                          ))}
+                        </span>
+                      ) : (
+                        <span>No point cards</span>
+                      )}
+                    </span>
+                  </button>
+                </th>
+                <td>{stat.points} points</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </section>

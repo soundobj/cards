@@ -67,6 +67,7 @@ function App() {
           name: player.name,
           points: player.wonCards.reduce((total, card) => total + card.points, 0),
           isWinner: state.context.winners.some((winner) => winner.id === player.id),
+          wonCards: player.wonCards,
         }))
         .sort((first, second) => Number(second.isWinner) - Number(first.isWinner) || second.points - first.points)
     : []
