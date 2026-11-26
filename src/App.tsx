@@ -6,6 +6,8 @@ import { useGetGameRoom } from './hooks/useGetGameRoom'
 import { briscaMachine } from './machines/briscaMachine'
 import { useMachine } from '@xstate/react'
 import type { Player } from './spanishDeck/games/brisca/brisca'
+import PlayerHand from './PlayerHand/PlayerHand'
+import Table from './Table/Table'
 
 const playerO: Player = {
   id: 0,
@@ -49,17 +51,27 @@ function App() {
   }, [actorRef]);
 
   const connected = !!room
+  const gamePlayers = state.context.players ?? [playerO, player1]
 
   return (
     <>
       <section id="center">
-        <div>
-        <div id="player0">
-              <h3>player 0: {playerO.name}</h3>
-            </div>
-            <div id="player1">
-            <h3>player 1: {player1.name}</h3>
-              </div>
+        <div className="table-area">
+          <Table
+            cards={state.context.tableHand}
+            gameSuit={state.context.gameSuit}
+          />
+        </div>
+        <div className="player-hands">
+          {gamePlayers.map((player) => (
+            <section className="player-seat" key={player.id}>
+              <h3>{player.name}</h3>
+              <PlayerHand
+                cards={player.cards}
+                onCardClick={(card) => console.log('Selected card:', card)}
+              />
+            </section>
+          ))}
         </div>
         <h1>Make sure your VPN is off!!</h1>
         <h1>{isHost ? 'Create a game' : 'Join a game'}</h1>

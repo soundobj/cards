@@ -1,0 +1,69 @@
+.player-hand {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 8.5rem;
+  width: 100%;
+}
+
+.player-hand__card {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  position: relative;
+  transform-origin: center 130%;
+  transition: transform 180ms ease;
+}
+
+.player-hand__card:focus-visible {
+  border-radius: 0.5rem;
+  outline: 3px solid #6b45c7;
+  outline-offset: 3px;
+}
+
+.player-hand__card:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.player-hand__card + .player-hand__card {
+  margin-left: -0.8rem;
+}
+
+.player-hand__card:nth-child(1) {
+  transform: rotate(-11deg) translateY(0.4rem);
+  z-index: 1;
+}
+
+.player-hand__card:nth-child(2) {
+  transform: translateY(-0.2rem);
+  z-index: 2;
+}
+
+.player-hand__card:nth-child(3) {
+  transform: rotate(11deg) translateY(0.4rem);
+  z-index: 1;
+}
+
+@media (max-width: 360px) {
+  .player-hand__card + .player-hand__card {
+    margin-left: -1rem;
+  }
+
+  .player-hand .playing-card {
+    height: 5.5rem;
+    width: 3.75rem;
+  }
+
+  .player-hand .playing-card__rank {
+    font-size: 2rem;
+  }
+
+  .player-hand .playing-card__suit {
+    font-size: 2.25rem;
+  }
+}

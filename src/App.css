@@ -70,6 +70,28 @@
   }
 }
 
+.player-hands {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 5vw, 3rem);
+  justify-content: center;
+  width: 100%;
+}
+
+.table-area {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.player-seat {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  min-width: min(100%, 14rem);
+}
+
 #next-steps {
   display: flex;
   border-top: 1px solid var(--border);

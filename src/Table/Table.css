@@ -1,0 +1,40 @@
+.card-table {
+  align-items: center;
+  background: #246b45;
+  box-sizing: border-box;
+  border-radius: 50%;
+  box-shadow: inset 0 0 1.5rem rgb(0 0 0 / 20%);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  min-height: 9rem;
+  padding: 1rem;
+  width: min(100%, 30rem);
+}
+
+.card-table__game-suit {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-table__played-cards {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .card-table {
+    gap: 0.5rem;
+    min-height: 7rem;
+  }
+
+  .card-table__played-cards {
+    gap: 0.5rem;
+  }
+}

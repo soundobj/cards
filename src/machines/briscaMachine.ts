@@ -2,24 +2,32 @@
 import { assign, setup, fromPromise } from "xstate";
 import {
   type BriscaCard,
+  type PlayedCard,
   type Player,
   briscaDeck,
   dealCards,
 } from "../spanishDeck/games/brisca/brisca";
 import { shuffleDeck } from "../spanishDeck/spanishDeck";
+import type { Card } from "../spanishDeck/spanishDeck";
 
 export const briscaMachine = setup({
   actors: {
     prepareGame: fromPromise(
       async ({ input }: { input: { players: Player[] } }) => {
-        let deck: BriscaCard[] = shuffleDeck(briscaDeck);
-        let players: Player[] = [];
+        const shuffledDeck = shuffleDeck(briscaDeck);
+        const gameSuit = shuffledDeck[0];
+        let deck = shuffledDeck.slice(1);
+        let players = input.players.map((player) => ({
+          ...player,
+          wonCards: [...player.wonCards],
+          cards: [...player.cards],
+        }));
 
         for (let hand = 0; hand < 3; hand += 1) {
-          [deck, players] = dealCards(deck, input.players);
+          [deck, players] = dealCards(deck, players);
         }
 
-        return { deck, players };
+        return { deck, gameSuit, players };
       },
     ),
   },
@@ -38,6 +46,10 @@ export const briscaMachine = setup({
   initial: "START_GAME",
   context: {
     deck: [] as BriscaCard[],
+    tableHand: [] as PlayedCard[],
+    currentPlayerId: null as number | null,
+    gameSuit: null as BriscaCard | null,
+    gameSuitId: null as Card["suit"] | null,
     players: null as Player[] | null,
   },
 
@@ -58,8 +70,13 @@ export const briscaMachine = setup({
         onDone: {
           target: "PLAYING_GAME",
           actions: [
-            assign({ deck: ({ event }) => event.output.deck }),
-            assign({ players: ({ event }) => event.output.players }),
+            assign(({ event }) => ({
+              deck: event.output.deck,
+              gameSuit: event.output.gameSuit,
+              gameSuitId: event.output.gameSuit.suit,
+              players: event.output.players,
+              currentPlayerId: event.output.players[0]?.id ?? null,
+            })),
             "consoleLogDeck",
           ],
         },

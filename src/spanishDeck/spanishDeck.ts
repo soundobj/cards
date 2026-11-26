@@ -1,4 +1,4 @@
-const suits = [
+export const suits = [
   { name: "cups", id: "c", icon: "🏆" },
   { name: "spades", id: "s", icon: "⚔️" },
   { name: "golds", id: "g", icon: "🟡" },

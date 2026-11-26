@@ -1,0 +1,25 @@
+.playing-card {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #c9c9c9;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 15%);
+  color: #202020;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  height: 6.5rem;
+  justify-content: center;
+  width: 4.5rem;
+}
+
+.playing-card__rank {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.playing-card__suit {
+  font-size: 2.75rem;
+  line-height: 1;
+}
