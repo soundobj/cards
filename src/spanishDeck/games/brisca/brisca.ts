@@ -19,6 +19,20 @@ const points: Partial<Record<Card["rank"], number>> = {
     cards: BriscaCard[],
   } 
 
+  export const resetPlayers = (players: Player[]): Player[] =>
+    players.map((player) => ({
+      ...player,
+      wonCards: [],
+      cards: [],
+    }));
+
+  export const chooseStartingPlayerAtRandom = (players: Player[]): Player[] => {
+    if (players.length === 0) return [];
+
+    const randomIndex = Math.floor(Math.random() * players.length);
+    return setPlayersTurn(players[randomIndex].id, players);
+  };
+
   export const dealCards = (
     deck: BriscaCard[],
     players: Player[],
@@ -37,6 +51,14 @@ const points: Partial<Record<Card["rank"], number>> = {
     ...card,
     points: points[card.rank] ?? 0,
   }));
+
+  export const removeCardFromDeckWhenOddPlayers = (
+    deck: BriscaCard[],
+    playersLength: number,
+  ): BriscaCard[] =>
+    playersLength % 2 === 1
+      ? deck.filter((card) => card.id !== "2-s")
+      : deck;
 
   export const getHandCards = <T extends Card>(
     cards: T[],

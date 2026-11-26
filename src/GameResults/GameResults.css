@@ -1,0 +1,77 @@
+.game-results {
+  animation: reveal-game-results 2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  background: rgb(12 52 37 / 96%);
+  border: 3px solid #edc36c;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 35%);
+  color: #fff;
+  left: 50%;
+  max-width: 90%;
+  padding: 0.75rem;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+
+.game-results table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.game-results caption {
+  font-size: 1.5rem;
+  font-weight: 800;
+  padding: 0.25rem 0.5rem 0.65rem;
+}
+
+.game-results th,
+.game-results td {
+  border-top: 1px solid rgb(255 255 255 / 25%);
+  padding: 0.5rem;
+}
+
+.game-results th {
+  font-size: 1rem;
+  text-align: left;
+}
+
+.game-results td {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.game-results__winner {
+  background: rgb(237 195 108 / 18%);
+  color: #ffe6a6;
+}
+
+.game-results__winner th,
+.game-results__winner td {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+@keyframes reveal-game-results {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -35%) scale(0.4);
+  }
+
+  55% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  75%,
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-results {
+    animation: none;
+  }
+}

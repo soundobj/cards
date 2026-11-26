@@ -52,6 +52,24 @@ function App() {
 
   const connected = !!room
   const gamePlayers = state.context.players ?? [playerO, player1]
+  const isPlayingHand = state.matches({ PLAYING_GAME: 'PLAYING_HAND' })
+  const currentPlayerName = isPlayingHand
+    ? gamePlayers.find((player) => player.id === state.context.currentPlayerId)?.name ?? null
+    : null
+  const isAnnouncingHandWinner = state.matches({ PLAYING_GAME: 'ANNOUNCING_HAND_WINNER' })
+  const handWinnerName = isAnnouncingHandWinner
+    ? gamePlayers.find((player) => player.id === state.context.handWinnerId)?.name ?? null
+    : null
+  const gameStats = state.matches({ PLAYING_GAME: 'GAME_OVER' })
+    ? (state.context.players ?? [])
+        .map((player) => ({
+          playerId: player.id,
+          name: player.name,
+          points: player.wonCards.reduce((total, card) => total + card.points, 0),
+          isWinner: state.context.winners.some((winner) => winner.id === player.id),
+        }))
+        .sort((first, second) => Number(second.isWinner) - Number(first.isWinner) || second.points - first.points)
+    : []
 
   return (
     <>
@@ -59,7 +77,12 @@ function App() {
         <div className="table-area">
           <Table
             cards={state.context.tableHand}
+            deckCount={state.context.deck.length}
             gameSuit={state.context.gameSuit}
+            currentPlayerName={currentPlayerName}
+            handWinnerName={handWinnerName}
+            winningCardId={state.context.handWinningCardId}
+            gameStats={gameStats}
           />
         </div>
         <div className="player-hands">
@@ -68,7 +91,10 @@ function App() {
               <h3>{player.name}</h3>
               <PlayerHand
                 cards={player.cards}
-                onCardClick={(card) => console.log('Selected card:', card)}
+                disabled={!isPlayingHand || state.context.currentPlayerId !== player.id}
+                onCardClick={(card) =>
+                  send({ type: 'playCard', playerId: player.id, cardId: card.id })
+                }
               />
             </section>
           ))}
@@ -80,7 +106,6 @@ function App() {
         >
           startGame
         </button>
-
         {!connected && (
           <>
             <p>
