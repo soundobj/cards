@@ -2,30 +2,51 @@
   align-items: center;
   background: #246b45;
   box-sizing: border-box;
-  border-radius: 50%;
+  border-radius: 5%;
   box-shadow: inset 0 0 1.5rem rgb(0 0 0 / 20%);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: center;
-  min-height: 9rem;
-  padding: 1rem;
+  display: grid;
+  gap: 0.75rem 1rem;
+  grid-template-areas:
+    "game-suit current-player"
+    "played-cards deck";
+  grid-template-columns: minmax(0, 1fr) minmax(6rem, 12rem);
+  grid-template-rows: auto minmax(10.75rem, auto);
+  min-height: 15rem;
+  padding: 0.75rem 1rem 1rem;
   position: relative;
-  width: min(100%, 30rem);
+  width: min(100%, 36rem);
 }
 
 .card-table__game-suit {
   align-items: center;
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  grid-area: game-suit;
+}
+
+.card-table__game-suit-name {
+  color: #fff;
+  font-weight: 700;
+  text-transform: capitalize;
 }
 
 .card-table__current-player {
   color: #fff;
   font-weight: 700;
+  grid-area: current-player;
   margin: 0;
-  text-align: center;
+  justify-self: end;
+  max-width: 100%;
+  text-align: right;
+}
+
+.card-table__deck-area {
+  align-self: center;
+  grid-area: deck;
+  height: 10.75rem;
+  position: relative;
+  justify-self: end;
+  width: 4.5rem;
 }
 
 .card-table__deck {
@@ -45,8 +66,39 @@
   display: flex;
   height: 6.5rem;
   justify-content: center;
-  position: relative;
+  left: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   width: 4.5rem;
+  z-index: 2;
+}
+
+.card-table__trump-card {
+  left: 0%;
+  position: absolute;
+  top: calc(25%);
+  transform: translateX(-50%) rotate(90deg);
+  z-index: 1;
+}
+
+.card-table__trump-card .playing-card {
+  align-items: end;
+  flex-direction: row;
+  gap: 0.15rem;
+  height: 4.5rem;
+  padding: 10px;
+  width: 3rem;
+}
+
+.card-table__trump-card .playing-card__rank {
+  font-size: 1.4rem;
+  transform: rotate(-90deg);
+}
+
+.card-table__trump-card .playing-card__suit {
+  font-size: 1.4rem;
+  transform: rotate(-90deg);
 }
 
 .card-table__deck--empty {
@@ -91,6 +143,15 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: center;
+  width: 100%;
+}
+
+.card-table__played-area {
+  align-items: center;
+  display: flex;
+  grid-area: played-cards;
+  justify-content: center;
+  min-width: 0;
 }
 
 .card-table__played-card--winner .playing-card {
@@ -123,14 +184,28 @@
   }
 }
 
+/*
 @media (max-width: 480px) {
   .card-table {
     gap: 0.5rem;
-    min-height: 7rem;
+    grid-template-columns: minmax(0, 1fr) minmax(5.25rem, 36%);
+    grid-template-rows: auto minmax(9.25rem, auto);
+    min-height: 11rem;
+    padding: 0.65rem 0.75rem 0.75rem;
+  }
+
+  .card-table__current-player,
+  .card-table__game-suit-name {
+    font-size: 0.9rem;
   }
 
   .card-table__played-cards {
     gap: 0.5rem;
+  }
+
+  .card-table__deck-area {
+    height: 9.25rem;
+    width: 3.75rem;
   }
 
   .card-table__deck {
@@ -138,7 +213,23 @@
     width: 3.75rem;
   }
 
-  .card-table__deck-count {
+  .card-table__trump-card {
+    top: calc(50% + 0.75rem);
+  }
+
+  .card-table__trump-card .playing-card {
+    height: 4rem;
+    padding: 0.4rem;
+    width: 2.75rem;
+  }
+
+  .card-table__trump-card .playing-card__rank {
+    font-size: 1rem;
+  }
+
+  .card-table__trump-card .playing-card__suit {
     font-size: 1.1rem;
   }
 }
+
+*/

@@ -74,7 +74,8 @@ function App() {
           <Table
             cards={state.context.tableHand}
             deckCount={state.context.deck.length}
-            gameSuit={state.context.gameSuit}
+            gameSuitCard={state.context.gameSuitCard}
+            gameSuitId={state.context.gameSuitId}
             currentPlayerName={currentPlayerName}
             handWinnerName={handWinnerName}
             winningCardId={state.context.handWinningCardId}

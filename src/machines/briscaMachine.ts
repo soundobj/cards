@@ -9,6 +9,7 @@ import {
   dealCards,
   findWinner,
   getHandWinner,
+  prepareFastForwardGame,
   removeCardFromDeckWhenOddPlayers,
   resetPlayers,
   setPlayersTurn,
@@ -21,6 +22,7 @@ type BriscaContext = {
   tableHand: PlayedCard[];
   currentPlayerId: number | null;
   gameSuit: BriscaCard | null;
+  gameSuitCard: BriscaCard | null;
   gameSuitId: Card["suit"] | null;
   handWinnerId: number | null;
   handWinningCardId: BriscaCard["id"] | null;
@@ -42,6 +44,7 @@ const createInitialGameContext = (players: Player[] | null): BriscaContext => ({
   handWinnerId: null,
   handWinningCardId: null,
   gameSuit: null,
+  gameSuitCard: null,
   gameSuitId: null,
   players,
   winners: [],
@@ -58,14 +61,20 @@ export const briscaMachine = setup({
     prepareGame: fromPromise(
       async ({ input }: { input: { players: Player[]; fastForwardToFinalHand: boolean } }) => {
         const cards = removeCardFromDeckWhenOddPlayers(briscaDeck, input.players.length);
-        const shuffledDeck = shuffleDeck(cards);
 
         if (input.fastForwardToFinalHand) {
-          let players = chooseStartingPlayerAtRandom(resetPlayers(input.players));
-          [, players] = dealCards(shuffledDeck, players);
-          return { deck: [], gameSuit: null, players };
+          const { gameSuitCard, gameSuitId, players } = prepareFastForwardGame(input.players, cards);
+
+          return {
+            deck: [],
+            gameSuit: null,
+            gameSuitCard,
+            gameSuitId,
+            players,
+          };
         }
 
+        const shuffledDeck = shuffleDeck(cards);
         const gameSuit = shuffledDeck[0];
         let deck = shuffledDeck.slice(1);
         let players = chooseStartingPlayerAtRandom(resetPlayers(input.players));
@@ -74,7 +83,13 @@ export const briscaMachine = setup({
           [deck, players] = dealCards(deck, players);
         }
 
-        return { deck, gameSuit, players };
+        return {
+          deck,
+          gameSuit,
+          gameSuitCard: gameSuit ?? null,
+          gameSuitId: gameSuit?.suit ?? null,
+          players,
+        };
       },
     ),
   },
@@ -226,7 +241,8 @@ export const briscaMachine = setup({
             assign(({ event }) => ({
               deck: event.output.deck,
               gameSuit: event.output.gameSuit,
-              gameSuitId: event.output.gameSuit?.suit ?? null,
+              gameSuitCard: event.output.gameSuitCard,
+              gameSuitId: event.output.gameSuitId,
               players: event.output.players,
               currentPlayerId: event.output.players[0]?.id ?? null,
               handWinnerId: null,

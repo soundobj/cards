@@ -60,6 +60,42 @@ const points: Partial<Record<Card["rank"], number>> = {
     points: points[card.rank] ?? 0,
   }));
 
+  export const prepareFastForwardGame = (
+    initialPlayers: Player[],
+    cards: BriscaCard[] = briscaDeck,
+  ): {
+    gameSuitCard: BriscaCard | null;
+    gameSuitId: BriscaCard["suit"] | null;
+    players: Player[];
+  } => {
+    const players = chooseStartingPlayerAtRandom(resetPlayers(initialPlayers));
+    const gameSuitId = cards.find((card) => card.points === 11)?.suit ?? null;
+    const winningCards = cards
+      .filter((card) => card.points > 0 && card.suit === gameSuitId)
+      .sort((first, second) => second.points - first.points)
+      .slice(0, 2);
+    const nonPointCards = cards.filter(
+      (card) => card.points === 0 && card.suit !== gameSuitId,
+    );
+    const gameSuitCard = cards.find(
+      (card) =>
+        card.suit === gameSuitId &&
+        !winningCards.some((winningCard) => winningCard.id === card.id),
+    ) ?? null;
+
+    return {
+      gameSuitCard,
+      gameSuitId,
+      players: players.map((player, index) => ({
+        ...player,
+        cards:
+          index === 0
+            ? winningCards
+            : nonPointCards.slice((index - 1) * 2, index * 2),
+      })),
+    };
+  };
+
   export const removeCardFromDeckWhenOddPlayers = (
     deck: BriscaCard[],
     playersLength: number,
