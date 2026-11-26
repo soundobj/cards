@@ -70,6 +70,24 @@
   }
 }
 
+.game-heading {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.game-heading h1 {
+  margin: 0;
+}
+
+.fast-forward-option {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
 .player-hands {
   align-items: flex-start;
   display: flex;

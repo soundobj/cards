@@ -25,6 +25,7 @@ const player1 : Player = {
 
 function App() {
   const [displayName, setDisplayName] = useState('')
+  const [fastForwardToFinalHand, setFastForwardToFinalHand] = useState(false)
 
   const {
     connect,
@@ -53,10 +54,12 @@ function App() {
   const connected = !!room
   const gamePlayers = state.context.players ?? [playerO, player1]
   const isPlayingHand = state.matches({ PLAYING_GAME: 'PLAYING_HAND' })
+  const isAnnouncingHandWinner = state.matches({ PLAYING_GAME: 'ANNOUNCING_HAND_WINNER' })
+  const isGameOver = state.matches({ PLAYING_GAME: 'GAME_OVER' })
+  const isGameInProgress = (state.matches('PLAYING_GAME') && !isGameOver)
   const currentPlayerName = isPlayingHand
     ? gamePlayers.find((player) => player.id === state.context.currentPlayerId)?.name ?? null
     : null
-  const isAnnouncingHandWinner = state.matches({ PLAYING_GAME: 'ANNOUNCING_HAND_WINNER' })
   const handWinnerName = isAnnouncingHandWinner
     ? gamePlayers.find((player) => player.id === state.context.handWinnerId)?.name ?? null
     : null
@@ -93,12 +96,42 @@ function App() {
           ))}
         </div>
         <h1>Make sure your VPN is off!!</h1>
-        <h1>{isHost ? 'Create a game' : 'Join a game'}</h1>
-        <button
-          onClick={() => send({ type: 'prepareGame', players: [playerO, player1] })}
-        >
-          startGame
-        </button>
+        <div className="game-heading">
+          <h1>{isHost ? 'Create a game' : 'Join a game'}</h1>
+          {isHost && (
+            <label className="fast-forward-option">
+              <input
+                type="checkbox"
+                checked={fastForwardToFinalHand}
+                onChange={(event) => setFastForwardToFinalHand(event.target.checked)}
+              />
+              Fast-forward to final hand
+            </label>
+          )}
+        </div>
+        {isHost && (
+          <button
+            onClick={() => {
+              if (isGameOver) {
+                send({
+                  type: 'newGame',
+                  players: [playerO, player1],
+                  fastForwardToFinalHand,
+                })
+              } else if (isGameInProgress) {
+                send({ type: 'cancelGame' })
+              } else {
+                send({
+                  type: 'prepareGame',
+                  players: [playerO, player1],
+                  fastForwardToFinalHand,
+                })
+              }
+            }}
+          >
+            {isGameOver ? 'New game' : isGameInProgress ? 'Cancel game' : 'Start game'}
+          </button>
+        )}
         {!connected && (
           <>
             <p>
