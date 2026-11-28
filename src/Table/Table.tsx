@@ -1,6 +1,6 @@
 import Card from "../Card/Card";
-import GameResults, { type GameStat } from "../GameResults/GameResults";
-import type { BriscaCard } from "../spanishDeck/games/brisca/brisca";
+import GameResults from "../GameResults/GameResults";
+import type { BriscaCard, GameStat } from "../spanishDeck/games/brisca/brisca";
 import "./Table.css";
 
 export type TableProps = {
