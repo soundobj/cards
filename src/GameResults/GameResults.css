@@ -41,6 +41,10 @@
   white-space: nowrap;
 }
 
+.game-results tbody tr {
+  cursor: help;
+}
+
 .game-results__winner {
   background: rgb(237 195 108 / 18%);
   color: #ffe6a6;
@@ -90,8 +94,8 @@
   z-index: 6;
 }
 
-.game-results__player:focus-visible .game-results__tooltip,
-.game-results__player:hover .game-results__tooltip {
+.game-results tbody tr:focus-within .game-results__tooltip,
+.game-results tbody tr:hover .game-results__tooltip {
   display: flex;
 }
 

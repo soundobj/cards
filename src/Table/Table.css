@@ -7,37 +7,31 @@
   display: grid;
   gap: 0.75rem 1rem;
   grid-template-areas:
-    "game-suit current-player"
+    "current-player ."
     "played-cards deck";
   grid-template-columns: minmax(0, 1fr) minmax(6rem, 12rem);
-  grid-template-rows: auto minmax(10.75rem, auto);
+  grid-template-rows: minmax(1.5rem, auto) minmax(10.75rem, auto);
   min-height: 15rem;
   padding: 0.75rem 1rem 1rem;
   position: relative;
   width: min(100%, 36rem);
 }
 
-.card-table__game-suit {
-  align-items: center;
-  display: flex;
-  gap: 0.35rem;
-  grid-area: game-suit;
-}
-
-.card-table__game-suit-name {
-  color: #fff;
-  font-weight: 700;
-  text-transform: capitalize;
+.card-table--deck-empty {
+  grid-template-areas:
+    "current-player ."
+    "played-cards played-cards";
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .card-table__current-player {
   color: #fff;
   font-weight: 700;
   grid-area: current-player;
+  justify-self: start;
   margin: 0;
-  justify-self: end;
   max-width: 100%;
-  text-align: right;
+  text-align: left;
 }
 
 .card-table__deck-area {
@@ -78,7 +72,7 @@
   left: 0%;
   position: absolute;
   top: calc(20%);
-  transform: translateX(-50%) rotate(90deg);
+  transform: translateX(-50%) rotate(270deg);
   z-index: 1;
 }
 

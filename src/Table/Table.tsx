@@ -1,14 +1,12 @@
 import Card from "../Card/Card";
 import GameResults, { type GameStat } from "../GameResults/GameResults";
 import type { BriscaCard } from "../spanishDeck/games/brisca/brisca";
-import { suits, type Card as PlayingCard } from "../spanishDeck/spanishDeck";
 import "./Table.css";
 
 export type TableProps = {
   cards: BriscaCard[];
   deckCount: number;
   gameSuitCard: BriscaCard | null;
-  gameSuitId: PlayingCard["suit"] | null;
   currentPlayerName: string | null;
   handWinnerName: string | null;
   winningCardId: BriscaCard["id"] | null;
@@ -19,16 +17,19 @@ export function Table({
   cards,
   deckCount,
   gameSuitCard,
-  gameSuitId,
   currentPlayerName,
   handWinnerName,
   winningCardId,
   gameStats,
 }: TableProps) {
-  const gameSuitDetails = suits.find((suit) => suit.id === gameSuitId);
+  const isDeckEmpty = deckCount === 0;
 
   return (
-    <div className="card-table" role="group" aria-label="Cards played this hand">
+    <div
+      className={isDeckEmpty ? "card-table card-table--deck-empty" : "card-table"}
+      role="group"
+      aria-label="Cards played this hand"
+    >
       <section className="card-table__played-area" aria-label="Played cards">
         <div className="card-table__played-cards">
           {cards.map((card) => (
@@ -54,27 +55,22 @@ export function Table({
         </p>
       )}
       <GameResults stats={gameStats} />
-      <div className="card-table__game-suit" aria-label="Game suit">
-        <span className="card-table__game-suit-name" aria-label="Suit">
-          {gameSuitDetails
-            ? `${gameSuitDetails.icon} ${gameSuitDetails.name}${gameSuitCard ? ` ${gameSuitCard.rank}` : ""}`
-            : null}
-        </span>
-      </div>
-      <section className="card-table__deck-area" aria-label="Deck and game suit card">
-        {gameSuitCard && (
-          <div className="card-table__trump-card">
-            <Card img={gameSuitCard.img} rank={gameSuitCard.rank} suit={gameSuitCard.suit} />
+      {!isDeckEmpty && (
+        <section className="card-table__deck-area" aria-label="Deck and game suit card">
+          {gameSuitCard && (
+            <div className="card-table__trump-card">
+              <Card img={gameSuitCard.img} rank={gameSuitCard.rank} suit={gameSuitCard.suit} />
+            </div>
+          )}
+          <div
+            aria-label={`${deckCount} cards left in the deck`}
+            className="card-table__deck"
+            role="img"
+          >
+            <span className="card-table__deck-count">{deckCount}</span>
           </div>
-        )}
-        <div
-          aria-label={`${deckCount} cards left in the deck`}
-          className={deckCount > 0 ? "card-table__deck" : "card-table__deck card-table__deck--empty"}
-          role="img"
-        >
-          <span className="card-table__deck-count">{deckCount}</span>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
