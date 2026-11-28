@@ -37,7 +37,7 @@ export function GameResults({ stats }: GameResultsProps) {
                         <span className="game-results__tooltip-cards">
                           {sortedWonCards.map((card) => (
                             <span className="game-results__tooltip-card" key={card.id}>
-                              <Card rank={card.rank} suit={card.suit} />
+                              <Card img={card.img} rank={card.rank} suit={card.suit} />
                               <span>{card.points} pts</span>
                             </span>
                           ))}

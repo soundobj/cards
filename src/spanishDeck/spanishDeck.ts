@@ -1,3 +1,5 @@
+import { appBaseUrl } from "../appConfig";
+
 export const suits = [
   { name: "cups", id: "c", icon: "🏆" },
   { name: "spades", id: "s", icon: "⚔️" },
@@ -12,7 +14,8 @@ type Suit = (typeof suits)[number];
 export type Card = {
   id: `${(typeof ranks)[number]}-${Suit["id"]}`;
   rank: (typeof ranks)[number];
-  suit: Suit["id"]
+  suit: Suit["id"];
+  img?: string;
 };
 
 export const createDeck = (): Card[] =>
@@ -21,6 +24,7 @@ export const createDeck = (): Card[] =>
       id: `${rank}-${suit.id}` as Card["id"],
       rank,
       suit: suit.id,
+      img: `${appBaseUrl}assets/spanishDeck/${rank}-${suit.id}.jpg`,
     })),
   );
 

@@ -1,9 +1,9 @@
 import { suits, type Card as PlayingCard } from "../spanishDeck/spanishDeck";
 import "./Card.css";
 
-export type CardProps = Pick<PlayingCard, "rank" | "suit">;
+export type CardProps = Pick<PlayingCard, "img" | "rank" | "suit">;
 
-export function Card({ rank, suit }: CardProps) {
+export function Card({ img, rank, suit }: CardProps) {
   const suitDetails = suits.find((item) => item.id === suit)!;
 
   return (
@@ -12,10 +12,16 @@ export function Card({ rank, suit }: CardProps) {
       role="img"
       aria-label={`${rank} of ${suitDetails.name}`}
     >
-      <span className="playing-card__rank">{rank}</span>
-      <span className="playing-card__suit" aria-hidden="true">
-        {suitDetails.icon}
-      </span>
+      {img ? (
+        <img alt="" aria-hidden="true" className="playing-card__image" src={img} />
+      ) : (
+        <>
+          <span className="playing-card__rank">{rank}</span>
+          <span className="playing-card__suit" aria-hidden="true">
+            {suitDetails.icon}
+          </span>
+        </>
+      )}
     </span>
   );
 }

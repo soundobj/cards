@@ -13,6 +13,13 @@
   width: 4.5rem;
 }
 
+.playing-card__image {
+  border-radius: inherit;
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
 .playing-card__rank {
   font-size: 2.5rem;
   font-weight: 800;

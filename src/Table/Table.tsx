@@ -38,7 +38,7 @@ export function Table({
                 : "card-table__played-card"}
               key={card.id}
             >
-              <Card rank={card.rank} suit={card.suit} />
+              <Card img={card.img} rank={card.rank} suit={card.suit} />
             </div>
           ))}
         </div>
@@ -64,7 +64,7 @@ export function Table({
       <section className="card-table__deck-area" aria-label="Deck and game suit card">
         {gameSuitCard && (
           <div className="card-table__trump-card">
-            <Card rank={gameSuitCard.rank} suit={gameSuitCard.suit} />
+            <Card img={gameSuitCard.img} rank={gameSuitCard.rank} suit={gameSuitCard.suit} />
           </div>
         )}
         <div

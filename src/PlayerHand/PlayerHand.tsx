@@ -26,7 +26,7 @@ export function PlayerHand({ cards, onCardClick, disabled = false }: PlayerHandP
           onClick={() => onCardClick(card)}
           type="button"
         >
-          <Card rank={card.rank} suit={card.suit} />
+          <Card img={card.img} rank={card.rank} suit={card.suit} />
         </button>
       ))}
     </div>
